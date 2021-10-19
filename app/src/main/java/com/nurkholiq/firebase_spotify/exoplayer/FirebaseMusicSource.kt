@@ -19,6 +19,16 @@ class FirebaseMusicSource {
                 field = value
             }
         }
+
+    fun whenReady(action: (Boolean) -> Unit): Boolean {
+        if (state == STATE_CREATED || state == STATE_INITIALIZING) {
+            onReadyListeners += action
+            return false
+        } else {
+            action(state == STATE_INITIALIZED)
+            return true
+        }
+    }
 }
 
 enum class State {
