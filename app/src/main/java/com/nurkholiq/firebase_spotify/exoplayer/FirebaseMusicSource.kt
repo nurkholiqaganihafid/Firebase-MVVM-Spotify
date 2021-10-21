@@ -30,6 +30,7 @@ class FirebaseMusicSource @Inject constructor(
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.subtitle)
                 .build()
         }
+        state = STATE_INITIALIZED
     }
 
     private val onReadyListeners = mutableListOf<(Boolean) -> Unit>()
