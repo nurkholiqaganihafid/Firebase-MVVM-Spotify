@@ -22,33 +22,37 @@ class MusicNotificationManager(
     private val newSongCallback: () -> Unit
 ) {
 
-//    private val notificationManager: PlayerNotificationManager
+    private val notificationManager: PlayerNotificationManager
+
+    init {
+        val mediaController = MediaControllerCompat(context, sessionToken)
+        notificationManager = PlayerNotificationManager.createWithNotificationChannel(
+            context,
+            NOTIFICATION_CHANNEL_ID,
+            R.string.notification_channel_name,
+            R.string.notification_channel_description,
+            NOTIFICATION_ID,
+            DescriptionAdapter(mediaController),
+            notificationListener
+        ).apply {
+            setSmallIcon(R.drawable.ic_music)
+            setMediaSessionToken(sessionToken)
+        }
+    }
+
+//    val mediaController = MediaControllerCompat(context, sessionToken)
 //
-//    init {
-//        notificationManager = PlayerNotificationManager.createWithNotificationChannel(
-//            context,
-//            NOTIFICATION_CHANNEL_ID,
-//            R.string.notification_channel_name,
-//            R.string.notification_channel_description,
-//            NOTIFICATION_ID,
-//            DescriptionAdapter(mediaController),
-//            notificationListener
-//        )
-//    }
-
-    val mediaController = MediaControllerCompat(context, sessionToken)
-
-    private val notificationManager: PlayerNotificationManager = PlayerNotificationManager.Builder(
-        context,
-        NOTIFICATION_ID,
-        NOTIFICATION_CHANNEL_ID,
-        DescriptionAdapter(mediaController)
-    ).apply {
-        setSmallIconResourceId(R.drawable.ic_music)
-        setChannelNameResourceId(R.string.notification_channel_name)
-        setChannelDescriptionResourceId(R.string.notification_channel_description)
-        setNotificationListener(notificationListener)
-    }.build()
+//    private val notificationManager: PlayerNotificationManager = PlayerNotificationManager.Builder(
+//        context,
+//        NOTIFICATION_ID,
+//        NOTIFICATION_CHANNEL_ID,
+//        DescriptionAdapter(mediaController)
+//    ).apply {
+//        setSmallIconResourceId(R.drawable.ic_music)
+//        setChannelNameResourceId(R.string.notification_channel_name)
+//        setChannelDescriptionResourceId(R.string.notification_channel_description)
+//        setNotificationListener(notificationListener)
+//    }.build()
 
     fun showNotification(player: Player) {
         notificationManager.setPlayer(player)
