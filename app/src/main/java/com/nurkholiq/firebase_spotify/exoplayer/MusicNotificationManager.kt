@@ -50,6 +50,10 @@ class MusicNotificationManager(
         setNotificationListener(notificationListener)
     }.build()
 
+    fun showNotification(player: Player) {
+        notificationManager.setPlayer(player)
+    }
+
     private inner class DescriptionAdapter(
         private val mediaController: MediaControllerCompat
     ) : PlayerNotificationManager.MediaDescriptionAdapter {
