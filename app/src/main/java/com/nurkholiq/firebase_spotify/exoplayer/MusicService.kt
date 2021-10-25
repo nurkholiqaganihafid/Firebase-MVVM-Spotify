@@ -3,20 +3,20 @@ package com.nurkholiq.firebase_spotify.exoplayer
 import android.app.PendingIntent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.nurkholiq.firebase_spotify.exoplayer.callbacks.MusicPlaybackPreparer
 import com.nurkholiq.firebase_spotify.exoplayer.callbacks.MusicPlayerEventListener
 import com.nurkholiq.firebase_spotify.exoplayer.callbacks.MusicPlayerNotificationListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 private const val SERVICE_TAG = "MusicService"
@@ -46,6 +46,10 @@ class MusicService : MediaBrowserServiceCompat() {
     private var curPlayingSong: MediaMetadataCompat? = null
 
     override fun onCreate() {
+        serviceScope.launch {
+            firebaseMusicSource.fetchMediaData()
+        }
+
         super.onCreate()
         val activityIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let {
             PendingIntent.getActivity(this, 0, it, 0)
@@ -77,10 +81,18 @@ class MusicService : MediaBrowserServiceCompat() {
 
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector.setPlaybackPreparer(musicPlaybackPreparer)
+        mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
         mediaSessionConnector.setPlayer(exoplayer)
 
         exoplayer.addListener(MusicPlayerEventListener(this))
         musicNotificationManager.showNotification(exoplayer)
+    }
+
+    private inner class MusicQueueNavigator : TimelineQueueNavigator(mediaSession) {
+        override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
+            return firebaseMusicSource.songs[windowIndex].description
+        }
+
     }
 
     private fun preparePlayer(
