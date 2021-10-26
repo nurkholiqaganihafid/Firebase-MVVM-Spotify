@@ -1,8 +1,10 @@
 package com.nurkholiq.firebase_spotify.exoplayer
 
+import android.content.ComponentName
 import android.content.Context
 import android.media.browse.MediaBrowser
 import android.os.Bundle
+import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -29,15 +31,29 @@ class MusicServiceConnection(
 
     lateinit var mediaController: MediaControllerCompat
 
+    private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
+
+    private val mediaBrowser = MediaBrowserCompat(
+        context,
+        ComponentName(
+            context,
+            MusicService::class.java
+        ),
+        mediaBrowserConnectionCallback,
+        null
+    )
+
     val transportController: MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
 
     private inner class MediaBrowserConnectionCallback(
         private val context: Context
-    ) : MediaBrowser.ConnectionCallback() {
+    ) : MediaBrowserCompat.ConnectionCallback() {
 
         override fun onConnected() {
-//            mediaController = MediaControllerCompat(context, )
+            mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
+                registerCallback(MediaControllerCallback())
+            }
             _isConnected.postValue(Event(Resource.success(true)))
         }
 
@@ -84,6 +100,10 @@ class MusicServiceConnection(
                     )
                 )
             }
+        }
+
+        override fun onSessionDestroyed() {
+            mediaBrowserConnectionCallback.onConnectionSuspended()
         }
     }
 }
