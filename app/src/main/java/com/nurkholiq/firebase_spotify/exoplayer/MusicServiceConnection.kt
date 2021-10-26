@@ -2,7 +2,6 @@ package com.nurkholiq.firebase_spotify.exoplayer
 
 import android.content.ComponentName
 import android.content.Context
-import android.media.browse.MediaBrowser
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
@@ -41,10 +40,18 @@ class MusicServiceConnection(
         ),
         mediaBrowserConnectionCallback,
         null
-    )
+    ).apply { connect() }
 
     val transportController: MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
+
+    fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
+        mediaBrowser.subscribe(parentId, callback)
+    }
+
+    fun unsubscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
+        mediaBrowser.unsubscribe(parentId, callback)
+    }
 
     private inner class MediaBrowserConnectionCallback(
         private val context: Context
