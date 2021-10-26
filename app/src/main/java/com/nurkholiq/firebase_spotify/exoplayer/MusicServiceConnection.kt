@@ -1,6 +1,7 @@
 package com.nurkholiq.firebase_spotify.exoplayer
 
 import android.content.Context
+import android.media.browse.MediaBrowser
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
@@ -30,6 +31,36 @@ class MusicServiceConnection(
 
     val transportController: MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
+
+    private inner class MediaBrowserConnectionCallback(
+        private val context: Context
+    ) : MediaBrowser.ConnectionCallback() {
+
+        override fun onConnected() {
+//            mediaController = MediaControllerCompat(context, )
+            _isConnected.postValue(Event(Resource.success(true)))
+        }
+
+        override fun onConnectionSuspended() {
+            _isConnected.postValue(
+                Event(
+                    Resource.error(
+                        "Sambungan dihentikan", false
+                    )
+                )
+            )
+        }
+
+        override fun onConnectionFailed() {
+            _isConnected.postValue(
+                Event(
+                    Resource.error(
+                        "Tidak dapat terhubung ke browser media", false
+                    )
+                )
+            )
+        }
+    }
 
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
