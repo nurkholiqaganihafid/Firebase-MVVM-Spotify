@@ -1,8 +1,9 @@
-package com.nurkholiq.firebase_spotify
+package com.nurkholiq.firebase_spotify.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.RequestManager
+import com.nurkholiq.firebase_spotify.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
