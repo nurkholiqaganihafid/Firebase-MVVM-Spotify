@@ -42,7 +42,7 @@ class MusicServiceConnection(
         null
     ).apply { connect() }
 
-    val transportController: MediaControllerCompat.TransportControls
+    val transportControls: MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
 
     fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
