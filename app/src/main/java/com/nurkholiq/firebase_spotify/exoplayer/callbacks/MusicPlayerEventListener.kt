@@ -1,7 +1,7 @@
 package com.nurkholiq.firebase_spotify.exoplayer.callbacks
 
 import android.widget.Toast
-import com.google.android.exoplayer2.PlaybackException
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.nurkholiq.firebase_spotify.exoplayer.MusicService
 
@@ -15,7 +15,7 @@ class MusicPlayerEventListener(
         }
     }
 
-    override fun onPlayerError(error: PlaybackException) {
+    override fun onPlayerError(error: ExoPlaybackException) {
         super.onPlayerError(error)
         Toast.makeText(musicService, "An unknown error occurred", Toast.LENGTH_LONG).show()
     }
