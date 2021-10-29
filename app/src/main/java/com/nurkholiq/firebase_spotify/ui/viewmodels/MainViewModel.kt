@@ -13,8 +13,11 @@ import com.nurkholiq.firebase_spotify.exoplayer.isPlaying
 import com.nurkholiq.firebase_spotify.exoplayer.isPrepared
 import com.nurkholiq.firebase_spotify.other.Constants.MEDIA_ROOT_ID
 import com.nurkholiq.firebase_spotify.other.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
     private val _mediaItems = MutableLiveData<Resource<List<Song>>>()

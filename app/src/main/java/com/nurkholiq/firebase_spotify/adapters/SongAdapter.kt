@@ -10,13 +10,13 @@ import com.bumptech.glide.RequestManager
 import com.nurkholiq.firebase_spotify.R
 import com.nurkholiq.firebase_spotify.data.entities.Song
 import com.nurkholiq.firebase_spotify.databinding.ListItemBinding
+import kotlinx.android.synthetic.main.list_item.view.*
 import javax.inject.Inject
 
 class SongAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
-    private lateinit var binding: ListItemBinding
 
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -49,9 +49,9 @@ class SongAdapter @Inject constructor(
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = songs[position]
         holder.itemView.apply {
-            binding.tvPrimary.text = song.title
-            binding.tvSecondary.text = song.subtitle
-            glide.load(song.imageUrl).into(binding.ivItemImage)
+            tvPrimary.text = song.title
+            tvSecondary.text = song.subtitle
+            glide.load(song.imageUrl).into(ivItemImage)
 
             setOnClickListener {
                 onItemClickListener?.let { click ->
