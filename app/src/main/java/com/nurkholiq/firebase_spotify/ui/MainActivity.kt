@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import com.nurkholiq.firebase_spotify.R
@@ -43,6 +44,23 @@ class MainActivity : AppCompatActivity() {
         subscribeToObservers()
 
         binding.vpSong.adapter = swipeSongAdapter
+
+        binding.vpSong.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (playbackState?.isPlaying == true) {
+                    mainViewModel.playOrToggleSong(swipeSongAdapter.songs[position])
+                } else {
+                    curPlayingSong = swipeSongAdapter.songs[position]
+                }
+            }
+        })
+
+        binding.ivPlayPause.setOnClickListener {
+            curPlayingSong?.let {
+                mainViewModel.playOrToggleSong(it, true)
+            }
+        }
     }
 
     private fun switchViewPagerToCurrentSong(song: Song) {
