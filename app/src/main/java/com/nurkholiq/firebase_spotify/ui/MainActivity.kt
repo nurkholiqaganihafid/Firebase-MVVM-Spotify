@@ -7,6 +7,7 @@ import com.bumptech.glide.RequestManager
 import com.nurkholiq.firebase_spotify.adapters.SwipeSongAdapter
 import com.nurkholiq.firebase_spotify.data.entities.Song
 import com.nurkholiq.firebase_spotify.databinding.ActivityMainBinding
+import com.nurkholiq.firebase_spotify.exoplayer.toSong
 import com.nurkholiq.firebase_spotify.other.Status.*
 import com.nurkholiq.firebase_spotify.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        subscribeToObservers()
 
         binding.vpSong.adapter = swipeSongAdapter
     }
@@ -61,6 +64,13 @@ class MainActivity : AppCompatActivity() {
                     LOADING -> Unit
                 }
             }
+        }
+        mainViewModel.curPlayingSong.observe(this) {
+            if (it == null) return@observe
+
+            curPlayingSong = it.toSong()
+            glide.load(curPlayingSong?.imageUrl).into((binding.ivCurSongImage))
+            switchViewPagerToCurrentSong(curPlayingSong ?: return@observe)
         }
     }
 }
