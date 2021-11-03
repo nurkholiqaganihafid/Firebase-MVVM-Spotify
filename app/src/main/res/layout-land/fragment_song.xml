@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/ivSongImage"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_marginStart="16dp"
         android:background="@color/darkBackground"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,9 +32,9 @@
         android:id="@+id/tvCurTime"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:gravity="center"
         android:text="00:00"
-        android:layout_marginStart="16dp"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/seekBar"
         app:layout_constraintStart_toEndOf="@+id/ivSongImage"
@@ -53,9 +53,9 @@
         android:id="@+id/tvSongDuration"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:gravity="center"
         android:text="00:00"
-        android:layout_marginEnd="16dp"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +91,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivPlayPauseDetail"
         app:layout_constraintStart_toEndOf="@+id/ivPlayPauseDetail"
         app:layout_constraintTop_toTopOf="@+id/ivPlayPauseDetail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/author"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SmallSp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

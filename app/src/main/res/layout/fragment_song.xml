@@ -22,8 +22,8 @@
 
     <ImageView
         android:id="@+id/ivSongImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="245dp"
+        android:layout_height="245dp"
         android:background="@color/darkBackground"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +93,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivPlayPauseDetail"
         app:layout_constraintStart_toEndOf="@+id/ivPlayPauseDetail"
         app:layout_constraintTop_toTopOf="@+id/ivPlayPauseDetail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/author"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SmallSp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
