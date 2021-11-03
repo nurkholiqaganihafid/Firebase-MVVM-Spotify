@@ -5,6 +5,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +20,8 @@ import com.nurkholiq.firebase_spotify.ui.viewmodels.MainViewModel
 import com.nurkholiq.firebase_spotify.ui.viewmodels.SongViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_song.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +39,8 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private var curPlayingSong: Song? = null
 
     private var playbackState: PlaybackStateCompat? = null
+
+    private var shouldUpdateSeekBar = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +62,25 @@ class SongFragment : Fragment(R.layout.fragment_song) {
                 mainViewModel.playOrToggleSong(it, true)
             }
         }
+
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    setCurPlayerTimeToTextView(progress.toLong())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                shouldUpdateSeekBar = false
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                seekBar?.let {
+                    mainViewModel.seekTo(it.progress.toLong())
+                    shouldUpdateSeekBar = true
+                }
+            }
+        })
 
         binding.ivSkipPrevious.setOnClickListener {
             mainViewModel.skipToPreviousSong()
@@ -101,7 +125,25 @@ class SongFragment : Fragment(R.layout.fragment_song) {
             binding.ivPlayPauseDetail.setImageResource(
                 if (playbackState?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play
             )
-            seekBar.progress = it?.position?.toInt() ?: 0
+            binding.seekBar.progress = it?.position?.toInt() ?: 0
         }
+
+        songViewModel.curPlayerPosition.observe(viewLifecycleOwner) {
+            if (shouldUpdateSeekBar) {
+                binding.seekBar.progress = it.toInt()
+                setCurPlayerTimeToTextView(it)
+            }
+        }
+
+        songViewModel.curSongDuration.observe(viewLifecycleOwner) {
+            binding.seekBar.max = it.toInt()
+            val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
+            binding.tvSongDuration.text = dateFormat.format(it)
+        }
+    }
+
+    private fun setCurPlayerTimeToTextView(ms: Long) {
+        val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
+        binding.tvCurTime.text = dateFormat.format(ms)
     }
 }
